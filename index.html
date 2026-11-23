@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>مساعد المقصود — معلم اللغة العربية</title>
+<title>المساعد الذكي — معلم اللغة العربية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -13,93 +13,233 @@
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{font-family:"Cairo",system-ui,sans-serif;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;height:100dvh}
-header{background:#0f2d7a;color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--gold)}
+header{background:#0f2d7a;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--gold)}
 header .mark{font-family:"Amiri",serif;font-size:30px;line-height:1;color:var(--gold);font-weight:700}
+header .t{flex:1}
 header h1{font-size:16px;margin:0}
 header p{font-size:12px;margin:2px 0 0;opacity:.8}
-#smart{background:var(--card);border-bottom:1px solid var(--line);padding:8px 16px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-#smart button{border:1px solid var(--gold);background:transparent;color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13px}
-#smart .bar{flex:1 1 100%;height:6px;background:var(--line);border-radius:6px;overflow:hidden;display:none}
-#smart .bar i{display:block;height:100%;width:0;background:var(--gold)}
+#clear{border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer}
+#clear.sure{background:#b3261e;border-color:#b3261e}
+details{background:var(--card);border-bottom:1px solid var(--line);padding:6px 16px;font-size:13px}
+summary{cursor:pointer;color:var(--muted)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.row select,.row button,label.chk{font:inherit;font-size:13px}
+.row select{padding:6px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.row button,.opts button,#chips button,.act{border:1px solid var(--gold);background:transparent;color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;font-size:13px}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;display:none;margin:4px 0}
+.bar i{display:block;height:100%;width:0;background:var(--gold)}
+#status{color:var(--muted);min-height:18px}
 #chat{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
 .msg{max-width:min(720px,92%);padding:10px 14px;border-radius:14px;line-height:1.9;white-space:pre-wrap;word-wrap:break-word}
 .bot{align-self:flex-start;background:var(--card);border:1px solid var(--line);font-family:"Amiri","Cairo",serif;font-size:19px;border-top-right-radius:4px}
 .me{align-self:flex-end;background:var(--user);color:var(--user-ink);font-size:15px;border-top-left-radius:4px}
-.src{display:block;margin-top:8px;font-family:"Cairo",sans-serif;font-size:12px;color:var(--muted)}
-.opts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.opts button,#chips button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer;text-align:right}
+.src{display:block;margin-top:8px;font-family:"Cairo",sans-serif;font-size:12px;color:var(--muted);white-space:normal}
+.src a{color:inherit}
+.opts{display:flex;flex-direction:column;gap:6px;margin-top:8px;align-items:flex-start}
+.opts button,.act{border-color:var(--line);background:var(--paper);border-radius:10px;font-size:14px;margin-top:6px}
 #chips{display:flex;gap:8px;padding:0 16px 8px;overflow-x:auto}
-#chips button{flex:none;border-radius:999px;font-size:13px;background:var(--card)}
+#chips button{flex:none;background:var(--card);border-color:var(--line)}
 form{display:flex;gap:8px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line)}
 textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--paper);color:var(--ink);font:inherit;max-height:120px}
 form button{border:0;border-radius:12px;padding:0 18px;background:var(--navy);color:#fff;font:inherit;font-weight:700;cursor:pointer}
-button:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+form button:disabled{opacity:.5}
+button:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 </style>
 </head>
 <body>
 <header>
   <div class="mark">ض</div>
-  <div><h1>مساعد المقصود — معلم اللغة العربية</h1><p>يجيبك من شرح الأستاذ محمد مباشرة</p></div>
+  <div class="t"><h1>المساعد الذكي</h1><p>معلم اللغة العربية — منصة الأستاذ محمد عبد المقصود</p></div>
+  <button id="clear" type="button">حذف المحادثة</button>
 </header>
 
-<div id="smart">
-  <span id="smartTxt">البحث الأساسي يعمل الآن. فعّل البحث الذكي ليفهم أسئلتك مهما اختلفت صياغتها (حوالي 120 ميجا، مرة واحدة).</span>
-  <button id="smartBtn" type="button">تفعيل البحث الذكي</button>
+<details id="panel">
+  <summary id="sum">إعدادات المساعد</summary>
+  <div class="row"><label class="chk"><input type="checkbox" id="web" checked> البحث في ويكيبيديا وويكي مصدر وويكاموس عند عدم وجود الإجابة</label></div>
+  <div class="row"><button id="smartBtn" type="button">تفعيل البحث الذكي (حوالي 120 ميجا)</button><span>يفهم الأسئلة بمختلف صياغاتها</span></div>
+  <div class="row">
+    <select id="genModel" aria-label="حجم النموذج">
+      <option value="onnx-community/Qwen2.5-1.5B-Instruct">وضع الإعراب والشرح (أدق، حوالي 1.1 جيجا)</option>
+      <option value="onnx-community/Qwen2.5-0.5B-Instruct">وضع الإعراب والشرح (أخف، حوالي 400 ميجا)</option>
+    </select>
+    <button id="genBtn" type="button">تفعيل</button>
+  </div>
   <div class="bar" id="bar"><i id="fill"></i></div>
-</div>
+  <div id="status"></div>
+</details>
 
 <main id="chat"></main>
 <div id="chips"></div>
 <form id="form">
-  <textarea id="input" rows="1" placeholder="اكتب سؤالك في النحو أو البلاغة أو الأدب…" aria-label="سؤالك"></textarea>
-  <button type="submit">إرسال</button>
+  <textarea id="input" rows="1" placeholder="اسأل في النحو أو البلاغة أو الأدب، أو اكتب: أعرب: جملتك" aria-label="سؤالك"></textarea>
+  <button id="send" type="submit">إرسال</button>
 </form>
 
 <script type="module">
-import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.1.2";
-import KB from "./knowledge.js";
+import { pipeline, TextStreamer, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.1.2";
+import KB, { IRAB } from "./knowledge.js";
 
-// حدود التشابه (قابلة للضبط بعد التجربة على أسئلة طلابك)
-const SEM_STRONG = 0.88, SEM_WEAK = 0.82;   // البحث الذكي
-const KEY_STRONG = 0.60, KEY_WEAK = 0.30;   // البحث بالكلمات
+const SEM_STRONG = 0.88, SEM_WEAK = 0.82;   // حدود البحث الذكي (قابلة للضبط)
+const KEY_STRONG = 0.60, KEY_WEAK = 0.30;   // حدود البحث بالكلمات
+const STORE = "mosa3ed-chat-v1";
 
 const $ = id => document.getElementById(id);
-const chat = $("chat"), form = $("form"), input = $("input");
-let embedder = null, vecs = [];
+const chat = $("chat"), form = $("form"), input = $("input"), send = $("send");
+let embedder = null, vecs = [], generator = null, busy = false, log = [];
 
-/* ---------- بحث بالكلمات (فوري) ---------- */
-const norm = t => t.replace(/[\u064B-\u0652\u0640]/g,"").replace(/[إأآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه")
-  .replace(/[؟?.,،!:؛()"]/g," ").toLowerCase();
-const STOP = new Set(["ما","هو","هي","من","في","علي","عن","مع","كيف","اشرح","لي","الفرق","بين","هل","ماذا","مثال","اعطني"]);
-const toks = t => norm(t).split(/\s+/).map(w => w.replace(/^(وال|بال|لل|ال|و)(?=.{3,})/,"")).filter(w => w.length > 1 && !STOP.has(w));
-const kwIndex = KB.map((it,i) => it.q.map(q => ({ i, q, t: new Set(toks(q)) })) ).flat();
+/* ---------- تطبيع وبحث بالكلمات ---------- */
+const norm = t => t.replace(/[\u064B-\u0652\u0640]/g,"").replace(/[إأآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[؟?.,،!:؛()"«»\-–]/g," ").replace(/\s+/g," ").trim().toLowerCase();
+const STOP = new Set(["ما","هو","هي","من","في","علي","عن","مع","كيف","اشرح","لي","الفرق","بين","هل","ماذا","مثال","ايه","يعني","عايز","عاوز","ازاي","امتي","فين","ليه","معني","تعريف","عرف","قولي","فهمني","لو","سمحت","اعطني"]);
+const toks = t => norm(t).split(" ").map(w => w.replace(/^(وال|بال|لل|ال|و)(?=.{3,})/,"")).filter(w => w.length > 1 && !STOP.has(w));
+const kwIndex = KB.flatMap((it,i) => it.q.map(q => ({ i, t: new Set(toks(q)) })));
 function kwSearch(q){
   const qt = toks(q); if (!qt.length) return [];
   const best = {};
   for (const e of kwIndex){
     let hit = 0; for (const w of qt) if (e.t.has(w)) hit++;
-    const sc = hit / Math.max(qt.length, e.t.size ? Math.min(e.t.size, qt.length + 1) : 1);
-    if (!best[e.i] || sc > best[e.i]) best[e.i] = sc;
+    const sc = hit / Math.max(qt.length, Math.min(e.t.size, qt.length + 1) || 1);
+    if (!(e.i in best) || sc > best[e.i]) best[e.i] = sc;
   }
   return Object.entries(best).map(([i,s]) => ({ i:+i, s })).sort((a,b) => b.s - a.s);
 }
-
-/* ---------- بحث ذكي (تضمين دلالي) ---------- */
 const dot = (a,b) => { let s = 0; for (let k = 0; k < a.length; k++) s += a[k]*b[k]; return s; };
 async function semSearch(q){
   const [v] = (await embedder("query: " + q, { pooling:"mean", normalize:true })).tolist();
   const best = {};
-  for (const e of vecs){ const s = dot(v, e.v); if (!best[e.i] || s > best[e.i]) best[e.i] = s; }
+  for (const e of vecs){ const s = dot(v, e.v); if (!(e.i in best) || s > best[e.i]) best[e.i] = s; }
   return Object.entries(best).map(([i,s]) => ({ i:+i, s })).sort((a,b) => b.s - a.s);
 }
 
-/* ---------- الواجهة ---------- */
-function add(text, cls){ const d = document.createElement("div"); d.className = "msg " + cls; d.textContent = text; chat.appendChild(d); chat.scrollTop = chat.scrollHeight; return d; }
-function showAnswer(i, note){
-  const d = add(KB[i].a, "bot");
-  const s = document.createElement("span"); s.className = "src"; s.textContent = "سؤال مطابق: " + KB[i].q[0] + (note ? " — " + note : "");
-  d.appendChild(s); chat.scrollTop = chat.scrollHeight;
+/* ---------- الرسائل والحفظ والحذف ---------- */
+function save(){ try { localStorage.setItem(STORE, JSON.stringify(log.slice(-60))); } catch {} }
+function render(entry){
+  const d = document.createElement("div"); d.className = "msg " + entry.cls;
+  const b = document.createElement("span"); b.className = "body"; b.textContent = entry.text; d.appendChild(b);
+  if (entry.src) d.appendChild(srcEl(entry.src));
+  chat.appendChild(d); chat.scrollTop = chat.scrollHeight; d._e = entry; return d;
 }
+function srcEl(src){
+  const s = document.createElement("span"); s.className = "src";
+  s.append(src.text || "");
+  if (src.url){ const a = document.createElement("a"); a.href = src.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = src.label || "فتح المصدر"; s.append(" ", a); }
+  return s;
+}
+function add(text, cls, src){ const e = { cls, text, src }; log.push(e); const d = render(e); save(); return d; }
+function setText(d, t){ d.querySelector(".body").textContent = t; d._e.text = t; chat.scrollTop = chat.scrollHeight; }
+function offerButton(d, label, fn){ const b = document.createElement("button"); b.type = "button"; b.className = "act"; b.textContent = label; b.onclick = fn; d.appendChild(document.createElement("br")); d.appendChild(b); }
+
+function greet(){
+  add("أهلًا بك! أنا المساعد الذكي، معلم اللغة العربية في منصة الأستاذ محمد عبد المقصود. اسألني في النحو أو البلاغة أو الأدب، أو اطلب إعراب جملة بكتابة: أعرب: ثم الجملة.", "bot");
+}
+try { const old = JSON.parse(localStorage.getItem(STORE) || "[]"); if (old.length){ log = old; old.forEach(render); } else greet(); } catch { greet(); }
+
+let clearTimer = null;
+$("clear").onclick = () => {
+  const b = $("clear");
+  if (!b.classList.contains("sure")){
+    b.classList.add("sure"); b.textContent = "اضغط للتأكيد";
+    clearTimer = setTimeout(() => { b.classList.remove("sure"); b.textContent = "حذف المحادثة"; }, 3500);
+    return;
+  }
+  clearTimeout(clearTimer); b.classList.remove("sure"); b.textContent = "حذف المحادثة";
+  log = []; chat.innerHTML = ""; try { localStorage.removeItem(STORE); } catch {}
+  greet();
+};
+
+/* ---------- تحميل النماذج ---------- */
+async function loadPipe(task, id, opts){
+  const files = {}; let last;
+  const cb = p => { if (p.status === "progress" && p.total){ files[p.file] = { l:p.loaded, t:p.total }; let L=0,T=0; for (const k in files){ L+=files[k].l; T+=files[k].t; } $("fill").style.width = (L/T*100).toFixed(1)+"%"; $("status").textContent = `تم تحميل ${(L/1048576).toFixed(0)} من ${(T/1048576).toFixed(0)} ميجا`; } };
+  for (const host of ["https://huggingface.co/","https://hf-mirror.com/"]){
+    try { env.remoteHost = host; return await pipeline(task, id, { ...opts, device:"wasm", progress_callback: cb }); }
+    catch (e){ last = e; console.warn(host, e); $("status").textContent = "جارٍ المحاولة من مصدر بديل…"; }
+  }
+  throw last;
+}
+function loading(on){ $("bar").style.display = on ? "block" : "none"; $("smartBtn").disabled = on; $("genBtn").disabled = on; if (on) $("panel").open = true; }
+
+async function enableSmart(){
+  if (embedder) return; loading(true); $("status").textContent = "جارٍ التحميل…";
+  try {
+    embedder = await loadPipe("feature-extraction", "Xenova/multilingual-e5-small", { dtype:"q8" });
+    $("status").textContent = "جارٍ تجهيز الأسئلة…";
+    const items = KB.flatMap((it,i) => it.q.map(q => ({ i, q })));
+    const out = (await embedder(items.map(x => "query: " + x.q), { pooling:"mean", normalize:true })).tolist();
+    vecs = items.map((x,k) => ({ i:x.i, v:out[k] }));
+    $("smartBtn").textContent = "البحث الذكي مفعّل"; $("status").textContent = "";
+    add("تم تفعيل البحث الذكي.", "bot");
+  } catch (e){ console.error(e); embedder = null; vecs = []; $("smartBtn").disabled = false; $("status").textContent = "تعذّر التحميل: " + (e.message || e); }
+  loading(false); if (embedder) $("smartBtn").disabled = true;
+}
+async function enableGen(){
+  if (generator) return; loading(true); $("status").textContent = "جارٍ التحميل…";
+  try {
+    generator = await loadPipe("text-generation", $("genModel").value, { dtype:"q4" });
+    $("genBtn").textContent = "وضع الإعراب مفعّل"; $("status").textContent = "";
+    add("تم تفعيل وضع الإعراب والشرح. اكتب: أعرب: ثم جملتك.", "bot");
+  } catch (e){ console.error(e); generator = null; $("genBtn").disabled = false; $("status").textContent = "تعذّر التحميل: " + (e.message || e); }
+  loading(false); if (generator){ $("genBtn").disabled = true; $("genModel").disabled = true; }
+}
+$("smartBtn").onclick = enableSmart; $("genBtn").onclick = enableGen;
+
+/* ---------- التوليد بالنموذج ---------- */
+const GEN_SYS = `أنت "المساعد الذكي"، معلم لغة عربية للمرحلة الثانوية في مصر ضمن منصة الأستاذ محمد عبد المقصود. أجب بالعربية الفصحى المبسطة وبأسلوب واضح ومشجع. إذا لم تكن متأكدًا فقل ذلك صراحة. إذا أُعطيت معلومات مرجعية فاعتمد عليها فقط في الإجابة.`;
+async function gen(messages, d, maxTokens = 450){
+  let acc = "";
+  const streamer = new TextStreamer(generator.tokenizer, { skip_prompt:true, skip_special_tokens:true, callback_function: t => { acc += t; setText(d, acc); } });
+  await generator(messages, { max_new_tokens: maxTokens, do_sample:false, repetition_penalty:1.05, streamer });
+  setText(d, acc.trim()); save(); return acc;
+}
+
+/* ---------- الإعراب ---------- */
+const IRAB_RE = /^\s*(?:من فضلك\s*)?[اأإآ](?:عرب|عراب)(?:ي|وا)?\s*(?:لي|لنا)?\s*(?:الجمل[ةه]|العبار[ةه])?\s*(?:التالي[ةه])?\s*[:：\-–]?\s*([\s\S]{3,})$/;
+async function doIrab(sentence){
+  const hit = IRAB.find(x => norm(x.s) === norm(sentence));
+  if (hit){ add(hit.a, "bot", { text:"إعراب معتمد من المعلم." }); return; }
+  if (!generator){
+    const d = add("لم أجد إعراب هذه الجملة ضمن الإعرابات المعتمدة. لإعراب أي جملة فعّل وضع الإعراب والشرح (يُحمَّل مرة واحدة).", "bot");
+    offerButton(d, "تفعيل وضع الإعراب الآن", async () => { await enableGen(); if (generator) doIrab(sentence); });
+    return;
+  }
+  const shots = IRAB.slice(0,3).flatMap(x => [{ role:"user", content:"أعرب إعرابًا مفصلًا: " + x.s }, { role:"assistant", content:x.a }]);
+  const d = add("…", "bot");
+  try {
+    await gen([{ role:"system", content: GEN_SYS + " عند الإعراب اذكر كل كلمة في سطر مستقل بصيغة: الكلمة: نوعها وحالتها وعلامة إعرابها." }, ...shots, { role:"user", content:"أعرب إعرابًا مفصلًا: " + sentence }], d, 350);
+    d._e.src = { text:"إعراب آلي بواسطة نموذج صغير وقد يخطئ، راجعه مع الأستاذ." }; d.appendChild(srcEl(d._e.src)); save();
+  } catch (e){ console.error(e); setText(d, "حدث خطأ أثناء الإعراب، جرّب جملة أقصر."); }
+}
+
+/* ---------- البحث في ويكيبيديا وويكي مصدر وويكاموس ---------- */
+const SITES = [["ar.wikipedia.org","ويكيبيديا"],["ar.wikisource.org","ويكي مصدر (المكتبة الحرة)"],["ar.wiktionary.org","ويكاموس (القاموس)"]];
+async function webSearch(q){
+  const sq = toks(q).join(" ") || q;
+  const all = await Promise.all(SITES.map(async ([h,n]) => {
+    try {
+      const u = `https://${h}/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(sq)}&gsrlimit=2&prop=extracts|info&exintro=1&explaintext=1&exchars=700&exlimit=2&inprop=url`;
+      const j = await (await fetch(u)).json();
+      return Object.values(j.query?.pages || {}).sort((a,b) => a.index - b.index).map(p => ({ site:n, title:p.title, url:p.fullurl, text:(p.extract || "").trim() })).filter(r => r.text);
+    } catch { return []; }
+  }));
+  return all.map(a => a[0]).filter(Boolean);
+}
+async function webAnswer(q){
+  const d = add("أبحث لك في المصادر الحرة…", "bot");
+  const res = await webSearch(q);
+  if (!res.length){ setText(d, "لم أجد هذا في شرح الأستاذ ولا في المصادر الحرة. جرّب صياغة أخرى أو اسأل الأستاذ مباشرة عبر المنصة."); save(); return; }
+  const top = res[0];
+  const srcText = `المصدر: ${top.site} — ${top.title}. النص بترخيص CC BY-SA.`;
+  if (generator){
+    try {
+      await gen([{ role:"system", content:GEN_SYS }, { role:"user", content:`المعلومات المرجعية:\n${top.text}\n\nالسؤال: ${q}\nأجب اعتمادًا على المعلومات المرجعية فقط وباختصار.` }], d, 300);
+    } catch (e){ console.error(e); setText(d, top.text); }
+  } else setText(d, top.text);
+  d._e.src = { text:srcText, url:top.url, label:"فتح الصفحة" }; d.appendChild(srcEl(d._e.src));
+  const others = res.slice(1); if (others.length){ const o = document.createElement("div"); o.className = "src"; o.append("مصادر أخرى: "); others.forEach((r,i) => { const a = document.createElement("a"); a.href = r.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = `${r.site} — ${r.title}`; if (i) o.append(" | "); o.append(a); }); d.appendChild(o); }
+  save();
+}
+
+/* ---------- المسار الرئيسي ---------- */
+function showAnswer(i){ add(KB[i].a, "bot", { text:"سؤال مطابق: " + KB[i].q[0] }); }
 function showOptions(list){
   const d = add("لم أجد إجابة مؤكدة. هل تقصد أحد هذه الأسئلة؟", "bot");
   const o = document.createElement("div"); o.className = "opts";
@@ -107,48 +247,26 @@ function showOptions(list){
   d.appendChild(o);
 }
 async function ask(q){
+  if (busy) return; busy = true; send.disabled = true;
   add(q, "me");
-  const sem = !!embedder;
-  const res = sem ? await semSearch(q) : kwSearch(q);
-  const [strong, weak] = sem ? [SEM_STRONG, SEM_WEAK] : [KEY_STRONG, KEY_WEAK];
-  if (res.length && res[0].s >= strong) showAnswer(res[0].i);
-  else if (res.length && res[0].s >= weak) showOptions(res);
-  else add("لم أجد هذا السؤال في شرح الأستاذ محمد حتى الآن. جرّب صياغة أخرى، أو اسأل الأستاذ مباشرة عبر المنصة." + (sem ? "" : "\nويمكنك تفعيل البحث الذكي من الأعلى لفهم أفضل للأسئلة."), "bot");
+  try {
+    const m = q.match(IRAB_RE);
+    if (m){ await doIrab(m[1].trim()); return; }
+    const sem = !!embedder;
+    const res = sem ? await semSearch(q) : kwSearch(q);
+    const [strong, weak] = sem ? [SEM_STRONG, SEM_WEAK] : [KEY_STRONG, KEY_WEAK];
+    if (res.length && res[0].s >= strong) showAnswer(res[0].i);
+    else if (res.length && res[0].s >= weak) showOptions(res);
+    else if ($("web").checked) await webAnswer(q);
+    else add("لم أجد هذا في شرح الأستاذ محمد. فعّل البحث في المصادر الحرة من الإعدادات أو اسأل الأستاذ مباشرة.", "bot");
+  } catch (e){ console.error(e); add("حدث خطأ غير متوقع، حاول مرة أخرى.", "bot"); }
+  busy = false; send.disabled = false; input.focus();
 }
 
 form.onsubmit = e => { e.preventDefault(); const q = input.value.trim(); if (!q) return; input.value = ""; input.style.height = "auto"; ask(q); };
 input.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); form.requestSubmit(); } });
 input.addEventListener("input", () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight,120) + "px"; });
-
-add("أهلًا بك! أنا معلم اللغة العربية في منصة الأستاذ محمد عبد المقصود. اسألني في النحو أو البلاغة أو الأدب، وسأجيبك من شرح الأستاذ.", "bot");
-KB.slice(0,6).forEach(it => { const b = document.createElement("button"); b.type = "button"; b.textContent = it.q[0]; b.onclick = () => ask(it.q[0]); $("chips").appendChild(b); });
-
-/* ---------- تفعيل البحث الذكي ---------- */
-$("smartBtn").onclick = async () => {
-  $("smartBtn").disabled = true; $("bar").style.display = "block"; $("smartTxt").textContent = "جارٍ تحميل البحث الذكي…";
-  const files = {};
-  const load = async host => {
-    env.remoteHost = host;
-    return pipeline("feature-extraction", "Xenova/multilingual-e5-small", {
-      dtype: "q8", device: "wasm",
-      progress_callback: p => { if (p.status === "progress" && p.total){ files[p.file] = { l:p.loaded, t:p.total }; let L=0,T=0; for (const k in files){ L+=files[k].l; T+=files[k].t; } $("fill").style.width = (L/T*100).toFixed(1)+"%"; $("smartTxt").textContent = `تم تحميل ${(L/1048576).toFixed(0)} من ${(T/1048576).toFixed(0)} ميجا`; } }
-    });
-  };
-  try {
-    try { embedder = await load("https://huggingface.co/"); }
-    catch (e1){ console.warn(e1); $("smartTxt").textContent = "جارٍ المحاولة من مصدر بديل…"; embedder = await load("https://hf-mirror.com/"); }
-    $("smartTxt").textContent = "جارٍ تجهيز الأسئلة…";
-    const items = KB.flatMap((it,i) => it.q.map(q => ({ i, q })));
-    const out = (await embedder(items.map(x => "query: " + x.q), { pooling:"mean", normalize:true })).tolist();
-    vecs = items.map((x,k) => ({ i:x.i, v:out[k] }));
-    $("smart").remove();
-    add("تم تفعيل البحث الذكي. اسألني بأي صياغة تناسبك.", "bot");
-  } catch (e){
-    console.error(e); embedder = null; vecs = [];
-    $("bar").style.display = "none"; $("smartBtn").disabled = false;
-    $("smartTxt").textContent = "تعذّر التحميل، والبحث الأساسي ما زال يعمل. السبب: " + (e && e.message ? e.message : e);
-  }
-};
+[...KB.slice(0,4).map(x => x.q[0]), "أعرب: جاءَ الطالبُ المجتهدُ"].forEach(t => { const b = document.createElement("button"); b.type = "button"; b.textContent = t; b.onclick = () => ask(t); $("chips").appendChild(b); });
 </script>
 </body>
 </html>
